@@ -7,3 +7,6 @@
 * [Erlang探索 | 系统技术非业余研究](http://blog.yufeng.info/archives/category/erlang)
 * [Learn You Some Erlang for Great Good!](http://learnyousomeerlang.com/introduction#about-this-tutorial)
 
+##总结(19.1)
+* [erlang时间](./doc/erlang_time.md)
+* [erlang线程](./doc/erlang_thread.md)
