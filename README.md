@@ -8,5 +8,5 @@
 * [Learn You Some Erlang for Great Good!](http://learnyousomeerlang.com/introduction#about-this-tutorial)
 
 ##总结(19.1)
-* [erlang时间](./doc/erlang_time.md)
-* [erlang线程](./doc/erlang_thread.md)
+* [erlang时间](./doc/sum_erlang_time.md)
+* [erlang线程](./doc/sum_erlang_thread.md)
