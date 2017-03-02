@@ -8,16 +8,16 @@
 %%%-----------------------------------------------------------------------------
 -module(ipip).
 
--export([read/0, find/2, parse/1]).
+-export([read/0, find/2, find_city/2]).
 
 %% =============================================================================
 %% @doc define
 %% =============================================================================
 -define(READ_PATH, "./17monipdb.dat").
--define(WRITE_PATH, "17monipdb.erl").
 
--define(IP_MAX, 255).
+-define(IP_MAX, 10).
 -define(SHOW_PER, 100).
+-define(CAL_LEN, ?IP_MAX * ?IP_MAX * ?IP_MAX).
 
 -define(B2IU(B),
         ((binary:at(B, 3) band 16#FF)
@@ -34,11 +34,17 @@
 %% 保留地址
 -define(BLDZ, <<228,191,157,231,149,153,229,156,176,229,157,128, _/binary>>).
 
+%% 共享地址
+-define(GXDZ, <<229,133,177,228,186,171,229,156,176,229,157,128, _/binary>>).
+
 %% 中国
 -define(ZG, <<228,184,173,229,155,189, _/binary>>).
 
 %% 数据中心
 -define(SJZX, <<228,184,173,229,155,189,9,228,184,173,229,155,189,9,9>>).
+
+%% 默认
+-define(DEFAULT_CITY, <<231,129,171,230,152,159>>).
 
 %% =============================================================================
 %% @doc interface
@@ -82,45 +88,20 @@ string(N, Len, Data) ->
     <<_:Length/unit:8, V:Len/binary, _/bits>> = Data, V.
 
 %% =============================================================================
-parse(Data) ->
-    io:format("start parse =>~n"),
-    {ok, File} = file:open(?WRITE_PATH, [write]),
-    loop_spawn(Data, ?IP_MAX),
-    Len = ?IP_MAX * ?IP_MAX * ?IP_MAX,
-    Result = wait(0, Len, []),
-    io:format(File, "~p", [Result]),
-    io:format("~nparse ok ~n").
-
-loop_spawn(_Data, 0) -> skip;
-loop_spawn(Data, 10) -> loop_spawn(Data, 10 - 1);
-loop_spawn(Data, 127) -> loop_spawn(Data, 127 - 1);
-loop_spawn(Data, P1) ->
-    Parent = self(),
-    spawn(fun() -> start_parse(Parent, Data, P1) end),
-    loop_spawn(Data, P1 - 1).
-
-start_parse(Parent, Data, P1) ->
-    List = [<<P1, P2, P3, 0>> || P2 <- lists:seq(0, ?IP_MAX), P3 <- lists:seq(0, ?IP_MAX)],
-    loop_parse(Parent, Data, List).
-
-loop_parse(Parent, Data, [IP | T]) ->
-    Result = find(Data, IP),
-    Parent ! {IP, Result},
-    loop_parse(Parent, Data, T);
-loop_parse(_Parent, _Data, []) -> skip.
-
-wait(Len, Len, Acc) -> Acc;
-wait(Cur, Len, Acc) ->
-    Cur rem (Len div 100) =:= 0 andalso io:format("="),
-    receive
-        {_IP, ?SJZX} ->
-            wait(Cur + 1, Len, Acc);
-        {IP, ?ZG = Result} ->
+find_city(Data, IP) ->
+    case find(Data, IP) of
+        ?BLDZ -> ?DEFAULT_CITY;
+        ?GXDZ -> ?DEFAULT_CITY;
+        ?SJZX -> ?DEFAULT_CITY;
+        ?ZG = Result ->
             case binary:split(Result, [<<"\t">>, <<" ">>], [global, trim]) of
-                [] -> wait(Cur + 1, Len, Acc);
-                List -> wait(Cur + 1, Len, [[IP, lists:last(List)] | Acc])
+                [] -> ?DEFAULT_CITY;
+                List -> lists:last(List)
             end;
-        _ ->
-            wait(Cur + 1, Len, Acc)
+        Result ->
+            case binary:split(Result, [<<"\t">>, <<" ">>], [global, trim]) of
+                [] -> ?DEFAULT_CITY;
+                List -> hd(List)
+            end
     end.
 
