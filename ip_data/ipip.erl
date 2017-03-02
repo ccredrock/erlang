@@ -64,13 +64,15 @@ find(Data, IP) ->
     loop_find(Start * 8 + 1024, Data, Value).
 
 loop_find(Start, Data, Value) ->
-    case ?B2IU(index32b(Start, Data)) >= Value of
+    I32B = index32b(Start, Data),
+    case ?B2IU(I32B) >= Value of
         false -> loop_find(Start + 8, Data, Value);
         true -> find_result(Start, Data)
     end.
 
 find_result(Start, Data) ->
-    Offset = ?B2IL(index32b(Start + 4, Data)) band 16#00FFFFFF,
+    I32B = index32b(Start + 4, Data),
+    Offset = ?B2IL(I32B) band 16#00FFFFFF,
     Length = index8(Start + 7, Data),
     string(Offset - 1024, Length, Data).
 
