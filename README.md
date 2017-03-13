@@ -13,3 +13,6 @@
 
 ##应用(19.1)
 * [ip 解析](./ip_data)
+
+##游戏开发
+* [erlang vs c++](./doc/sum_game_erlang_vs_cpp.md)

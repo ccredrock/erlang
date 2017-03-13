@@ -15,10 +15,6 @@
 %% =============================================================================
 -define(READ_PATH, "./17monipdb.dat").
 
--define(IP_MAX, 10).
--define(SHOW_PER, 100).
--define(CAL_LEN, ?IP_MAX * ?IP_MAX * ?IP_MAX).
-
 -define(B2IU(B),
         ((binary:at(B, 3) band 16#FF)
          bor ((binary:at(B, 2) bsl 8) band 16#FF00)
