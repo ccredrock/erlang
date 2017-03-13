@@ -1,0 +1,55 @@
+module 'test' ['do_test'/0,
+	       'module_info'/0,
+	       'module_info'/1,
+	       'test'/0]
+    attributes []
+'test'/0 =
+    %% Line 6
+    fun () ->
+	do  %% Line 7
+	    call 'lists':'seq'
+		(1, 100)
+	    do  %% Line 8
+		call 'test':'do_test'
+		    ()
+		do  %% Line 9
+		    apply 'do_test'/0
+			()
+		    do  %% Line 10
+			apply 'do_test1'/0
+			    ()
+			let <_cor0> =
+			    fun () ->
+				%% Line 11
+				call 'lists':'seq'
+				    ()
+			in  do  %% Line 11
+				apply _cor0
+				    ()
+				do  %% Line 12
+				    apply ( 'do_test'/0
+					    -| [{'id',{0,0,'-test/0-fun-1-'}}] )
+					()
+				    %% Line 13
+				    apply ( 'do_test1'/0
+					    -| [{'id',{0,0,'-test/0-fun-2-'}}] )
+					()
+'do_test'/0 =
+    %% Line 15
+    fun () ->
+	call 'lists':'seq'
+	    (1, 100)
+'do_test1'/0 =
+    %% Line 17
+    fun () ->
+	call 'lists':'seq'
+	    (1, 100)
+'module_info'/0 =
+    fun () ->
+	call 'erlang':'get_module_info'
+	    ('test')
+'module_info'/1 =
+    fun (_cor0) ->
+	call 'erlang':'get_module_info'
+	    ('test', _cor0)
+end

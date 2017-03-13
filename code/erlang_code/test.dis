@@ -1,0 +1,36 @@
+00007F0753DAB528: i_func_info_IaaI 0 test test 0 
+00007F0753DAB550: allocate_tt 0 0 
+00007F0753DAB560: move_x1_c 100 
+00007F0753DAB570: i_move_call_ext_ce 1 lists:seq/2 
+00007F0753DAB588: i_call_ext_e test:do_test/0 
+00007F0753DAB598: i_call_f test:do_test/0 
+00007F0753DAB5A8: i_call_f test:do_test1/0 
+00007F0753DAB5B8: i_make_fun_It 1406858600 0 
+00007F0753DAB5D0: i_call_fun_I 0 
+00007F0753DAB5E0: i_call_f test:do_test/0 
+00007F0753DAB5F0: i_call_last_fP test:do_test1/0 0 
+
+00007F0753DAB608: i_func_info_IaaI 0 test do_test 0 
+00007F0753DAB630: move_x1_c 100 
+00007F0753DAB640: i_move_call_ext_only_ec lists:seq/2 1 
+
+00007F0753DAB658: i_func_info_IaaI 0 test do_test1 0 
+00007F0753DAB680: move_x1_c 100 
+00007F0753DAB690: i_move_call_ext_only_ec lists:seq/2 1 
+
+00007F0753DAB6A8: i_func_info_IaaI 0 test module_info 0 
+00007F0753DAB6D0: move_cr test r(0) 
+00007F0753DAB6E0: allocate_tt 0 1 
+00007F0753DAB6F0: call_bif_e erlang:get_module_info/1 
+00007F0753DAB700: deallocate_return_Q 0 
+
+00007F0753DAB710: i_func_info_IaaI 0 test module_info 1 
+00007F0753DAB738: move_rx r(0) x(1) 
+00007F0753DAB748: move_cr test r(0) 
+00007F0753DAB758: allocate_tt 0 2 
+00007F0753DAB768: call_bif_e erlang:get_module_info/2 
+00007F0753DAB778: deallocate_return_Q 0 
+
+00007F0753DAB788: i_func_info_IaaI 0 test '-test/0-fun-0-' 0 
+00007F0753DAB7B0: i_call_ext_only_e lists:seq/0 
+
