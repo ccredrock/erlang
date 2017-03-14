@@ -1,4 +1,4 @@
-#erlang 代码机制
+# erlang 代码机制
 
 ## 代码编译 compile:options()
 * 源代码:     test.erl

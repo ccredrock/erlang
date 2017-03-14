@@ -1,4 +1,4 @@
-#游戏代码
+# 游戏代码
 
 ## deps
 * deps/common/src/common_util.erl
