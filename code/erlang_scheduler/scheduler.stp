@@ -1,0 +1,56 @@
+#! /usr/bin/env stap
+/* stap scheduler.stp /home/redrock/erlang/otp19.1/erts-8.1/bin/beam.smp */
+
+global thread_count
+global beam_proc_count
+global beam_module_count
+global beam_thread_count
+global beam_scheduler_count = -1
+
+probe begin
+{
+    printf("probe start pid:%d, exec:%s\n", stp_pid(), @1);
+}
+
+function beam_action(action)
+{
+    printf("beam cpu:%d, pid:%d, tid:%d => %s\n",
+            cpu(), pid(), tid(), action);
+}
+
+function beam_count(action, count)
+{
+    printf("beam cpu:%d, pid:%d, tid:%d => %s, %d\n",
+            cpu(), pid(), tid(), action, count);
+}
+
+/*action*/
+probe process(@1).function("main@*erl_main.c")
+{ beam_action("beam start") }
+
+probe process(@1).function("erl_first_process_otp@*erl_init.c")
+{ beam_action("create first proc") }
+
+/*action count*/
+probe process(@1).function("erts_msacc_init_thread@*erl_msacc.c")
+{ beam_count("beam thread", ++beam_thread_count) }
+
+probe process(@1).function("process_main@*beam_emu.c")
+{
+    if(++beam_scheduler_count > 0)
+        beam_count("beam scheduler ", beam_scheduler_count);
+}
+
+probe process(@1).function("erl_create_process@*erl_process.c")
+{ beam_count("beam proc", ++beam_proc_count) }
+
+/*count*/
+probe process(@1).function("ethr_thr_create@*ethread.c")
+{ ++thread_count }
+
+probe process(@1).function("ethr_thr_exit@*ethread.c")
+{ --thread_count }
+
+probe process(@1).function("erts_put_module@*module.c")
+{ ++beam_module_count }
+
