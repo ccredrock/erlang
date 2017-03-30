@@ -22,3 +22,5 @@
 ## 游戏开发
 * [erlang vs c++](./doc/sum_game_erlang_vs_cpp.md)
 
+## 配置
+* [centos install erlang](./doc/sum_centos_install_erlang.md)
